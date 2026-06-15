@@ -1,0 +1,164 @@
+# Time Series Group 06
+
+## 1. Thành Viên Nhóm
+
+| STT | Họ và tên | Vai trò dự kiến |
+|---:|---|---|
+| 1 | Thành viên 1 | Đọc iTransformer, phân tích dữ liệu |
+| 2 | Thành viên 2 | Đọc TimeMixer, feature engineering |
+| 3 | Thành viên 3 | Đọc xLSTM-Mixer, mô hình và đánh giá |
+
+## 2. Chủ Đề Nghiên Cứu
+
+**Dự báo nhu cầu thuê xe đạp theo giờ bằng chuỗi thời gian nhiều chiều**
+
+Nhóm nghiên cứu bài toán dự báo số lượng xe đạp được thuê trong giờ tiếp theo dựa trên nhiều biến đầu vào như thời gian, mùa vụ, thời tiết, nhiệt độ, độ ẩm, tốc độ gió và nhu cầu thuê xe trong quá khứ.
+
+## 3. Mô Tả Bộ Dữ Liệu
+
+Dataset dự kiến sử dụng: **UCI Bike Sharing Dataset**
+
+Link dataset: https://archive.ics.uci.edu/dataset/275/bike+sharing+dataset
+
+File sử dụng: `hour.csv`
+
+Biến mục tiêu:
+
+```text
+cnt
+```
+
+Một số biến đầu vào:
+
+```text
+season, yr, mnth, hr, holiday, weekday, workingday,
+weathersit, temp, atemp, hum, windspeed
+```
+
+Nhóm không sử dụng `casual` và `registered` làm biến đầu vào vì:
+
+```text
+casual + registered = cnt
+```
+
+Nếu sử dụng hai biến này, mô hình sẽ bị rò rỉ dữ liệu.
+
+## 4. Bài Toán
+
+Dạng bài toán:
+
+```text
+Input : X[t-L+1 : t] ∈ R^{L × d}
+Output: y[t+h] ∈ R
+```
+
+Dự kiến:
+
+```text
+L = 24 giờ
+h = 1 giờ
+y = cnt
+```
+
+Nghĩa là mô hình sử dụng dữ liệu của 24 giờ gần nhất để dự báo số lượng xe được thuê trong 1 giờ tiếp theo.
+
+## 5. Ba Bài Báo Đã Đọc
+
+| STT | Bài báo | File tóm tắt |
+|---:|---|---|
+| 1 | iTransformer: Inverted Transformers Are Effective for Time Series Forecasting | `papers/paper_01_itransformer.md` |
+| 2 | TimeMixer: Decomposable Multiscale Mixing for Time Series Forecasting | `papers/paper_02_timemixer.md` |
+| 3 | xLSTM-Mixer: Multivariate Time Series Forecasting by Mixing via Scalar Memories | `papers/paper_03_xlstm_mixer.md` |
+
+## 6. Phương Pháp Thực Hiện
+
+Các bước chính:
+
+1. Đọc và tóm tắt 3 bài báo về dự báo chuỗi thời gian nhiều chiều.
+2. Thu thập và mô tả dataset.
+3. Kiểm tra missing values, outlier và tần suất lấy mẫu.
+4. Tạo đặc trưng thời gian, Fourier features, lag features và rolling features.
+5. Chuẩn hóa dữ liệu.
+6. Chia train/validation/test theo thứ tự thời gian với tỷ lệ 70/15/15.
+7. Huấn luyện các mô hình dự báo.
+8. Đánh giá mô hình bằng MAE, RMSE và MAPE/sMAPE.
+9. Vẽ biểu đồ `y_true` vs `y_pred`.
+
+## 7. Các Mô Hình Sử Dụng
+
+Nhóm dự kiến xây dựng ít nhất 3 mô hình:
+
+| Nhóm mô hình | Mô hình dự kiến |
+|---|---|
+| Baseline | Naive Forecast, Moving Average |
+| Machine Learning | Linear Regression, Random Forest |
+| Deep Learning | GRU hoặc LSTM |
+
+## 8. Kết Quả
+
+Bảng kết quả sẽ được cập nhật sau khi huấn luyện mô hình.
+
+| Model | MAE | RMSE | MAPE/sMAPE |
+|---|---:|---:|---:|
+| Naive Forecast |  |  |  |
+| Moving Average |  |  |  |
+| Random Forest |  |  |  |
+| GRU/LSTM |  |  |  |
+
+Kết quả chi tiết được lưu tại:
+
+```text
+results/metrics.csv
+```
+
+## 9. Cách Chạy Code
+
+Cài đặt thư viện:
+
+```bash
+pip install -r requirements.txt
+```
+
+Chạy các notebook theo thứ tự:
+
+```text
+notebooks/01_data_exploration.ipynb
+notebooks/02_feature_engineering.ipynb
+notebooks/03_models.ipynb
+notebooks/04_evaluation.ipynb
+```
+
+## 10. Cấu Trúc Repository
+
+```text
+time-series-group-06/
+├── README.md
+├── papers/
+│   ├── paper_01_itransformer.md
+│   ├── paper_02_timemixer.md
+│   └── paper_03_xlstm_mixer.md
+├── data/
+│   ├── raw/
+│   └── processed/
+├── notebooks/
+│   ├── 01_data_exploration.ipynb
+│   ├── 02_feature_engineering.ipynb
+│   ├── 03_models.ipynb
+│   └── 04_evaluation.ipynb
+├── src/
+│   ├── data_loader.py
+│   ├── features.py
+│   ├── models.py
+│   └── evaluation.py
+├── figures/
+├── results/
+│   └── metrics.csv
+├── report/
+│   └── final_report.md
+├── requirements.txt
+└── .gitignore
+```
+
+## 11. Kết Luận
+
+Đề tài phù hợp với yêu cầu bài tập vì có đầu vào là chuỗi thời gian nhiều chiều và đầu ra là một biến mục tiêu một chiều. Dataset có tính mùa vụ rõ ràng, phù hợp để áp dụng các bước tiền xử lý, tạo đặc trưng và so sánh nhiều mô hình dự báo.

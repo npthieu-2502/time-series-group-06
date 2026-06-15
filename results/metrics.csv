@@ -1,0 +1,5 @@
+model,mae,rmse,mape_smape
+Naive Forecast,,,
+Moving Average,,,
+Random Forest,,,
+GRU/LSTM,,,
