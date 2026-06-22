@@ -10,7 +10,6 @@ env/
 
 # Large local data files can be kept out of Git if needed.
 data/raw/*.zip
-data/raw/*.csv
 
 # Model checkpoints
 *.pt
