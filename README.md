@@ -43,7 +43,38 @@ casual + registered = cnt
 
 Nếu sử dụng hai biến này, mô hình sẽ bị rò rỉ dữ liệu.
 
-## 4. Bài Toán
+## 4. Feature Engineering (Thành viên 2 – phụ trách)
+
+Notebook `notebooks/02_feature_engineering.ipynb` thực hiện toàn bộ pipeline:
+
+### 4.1 Các bước xử lý
+
+| Bước | Nội dung |
+|------|----------|
+| Kiểm tra missing values | `hour.csv` không có missing value trong các cột |
+| Kiểm tra sampling | Dữ liệu hourly, có ~165 timestamp bị thiếu; xử lý bằng cách tính lag/rolling theo thứ tự hàng |
+| Outlier handling | Winsorization Q1%–Q99% trên `cnt` (giữ nguyên số hàng, không xóa hàng) |
+| Time features | `hour`, `day_of_week`, `month`, `is_weekend` |
+| Fourier features | `hour_sin/cos` (chu kỳ 24h), `weekday_sin/cos` (7 ngày), `month_sin/cos` (12 tháng) |
+| Lag features | `lag_1` (1h trước), `lag_24` (cùng giờ hôm qua), `lag_168` (cùng giờ tuần trước) |
+| Rolling features | `rolling_mean_24` (trung bình 24h), `rolling_std_24` (std 24h) |
+| Loại bỏ leakage | Xóa `casual`, `registered`, `dteday`, `instant` |
+| Train/Val/Test split | 70% / 15% / 15% theo thứ tự thời gian, **không shuffle** |
+
+### 4.2 Chuẩn hóa dữ liệu
+
+**File `data/processed/bike_sharing_processed.csv` lưu giá trị GỐC (chưa chuẩn hóa).**
+
+- `StandardScaler` được thực hiện trong bước huấn luyện mô hình (`03_models.ipynb`) để tránh data leakage.
+- Scaler được **fit chỉ trên tập train**, sau đó transform cả train/val/test.
+
+### 4.3 Liên hệ với bài báo TimeMixer
+
+- Fourier features ↔ phân rã mùa vụ đa thang đo (Periodic Decomposition Mixing – PDM)
+- `lag_1`, `lag_24`, `lag_168` ↔ đa thang đo lịch sử (multi-scale past mixing)
+- `rolling_mean_24` ↔ làm mượt xu hướng trong PDM
+
+## 5. Bài Toán
 
 Dạng bài toán:
 
@@ -62,7 +93,7 @@ y = cnt
 
 Nghĩa là mô hình sử dụng dữ liệu của 24 giờ gần nhất để dự báo số lượng xe được thuê trong 1 giờ tiếp theo.
 
-## 5. Ba Bài Báo Đã Đọc
+## 6. Ba Bài Báo Đã Đọc
 
 | STT | Bài báo | File tóm tắt |
 |---:|---|---|
@@ -70,7 +101,7 @@ Nghĩa là mô hình sử dụng dữ liệu của 24 giờ gần nhất để d
 | 2 | TimeMixer: Decomposable Multiscale Mixing for Time Series Forecasting | `papers/paper_02_timemixer.md` |
 | 3 | xLSTM-Mixer: Multivariate Time Series Forecasting by Mixing via Scalar Memories | `papers/paper_03_xlstm_mixer.md` |
 
-## 6. Phương Pháp Thực Hiện
+## 7. Phương Pháp Thực Hiện
 
 Các bước chính:
 
@@ -84,7 +115,7 @@ Các bước chính:
 8. Đánh giá mô hình bằng MAE, RMSE và MAPE/sMAPE.
 9. Vẽ biểu đồ `y_true` vs `y_pred`.
 
-## 7. Các Mô Hình Sử Dụng
+## 8. Các Mô Hình Sử Dụng
 
 Nhóm dự kiến xây dựng ít nhất 3 mô hình:
 
@@ -94,7 +125,7 @@ Nhóm dự kiến xây dựng ít nhất 3 mô hình:
 | Machine Learning | Linear Regression, Random Forest |
 | Deep Learning | GRU hoặc LSTM |
 
-## 8. Kết Quả
+## 9. Kết Quả
 
 Bảng kết quả sẽ được cập nhật sau khi huấn luyện mô hình.
 
@@ -111,7 +142,7 @@ Kết quả chi tiết được lưu tại:
 results/metrics.csv
 ```
 
-## 9. Cách Chạy Code
+## 10. Cách Chạy Code
 
 Cài đặt thư viện:
 
@@ -128,7 +159,7 @@ notebooks/03_models.ipynb
 notebooks/04_evaluation.ipynb
 ```
 
-## 10. Cấu Trúc Repository
+## 11. Cấu Trúc Repository
 
 ```text
 time-series-group-06/
@@ -150,6 +181,8 @@ time-series-group-06/
 │   ├── features.py
 │   ├── models.py
 │   └── evaluation.py
+├── scripts/
+│   └── generate_processed_data.py
 ├── figures/
 ├── results/
 │   └── metrics.csv
@@ -159,6 +192,6 @@ time-series-group-06/
 └── .gitignore
 ```
 
-## 11. Kết Luận
+## 12. Kết Luận
 
 Đề tài phù hợp với yêu cầu bài tập vì có đầu vào là chuỗi thời gian nhiều chiều và đầu ra là một biến mục tiêu một chiều. Dataset có tính mùa vụ rõ ràng, phù hợp để áp dụng các bước tiền xử lý, tạo đặc trưng và so sánh nhiều mô hình dự báo.
