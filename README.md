@@ -117,29 +117,40 @@ Các bước chính:
 
 ## 8. Các Mô Hình Sử Dụng
 
-Nhóm dự kiến xây dựng ít nhất 3 mô hình:
+Nhóm đã xây dựng và so sánh 4 mô hình:
 
-| Nhóm mô hình | Mô hình dự kiến |
+| Nhóm mô hình | Mô hình |
 |---|---|
 | Baseline | Naive Forecast, Moving Average |
-| Machine Learning | Linear Regression, Random Forest |
-| Deep Learning | GRU hoặc LSTM |
+| Machine Learning | Random Forest |
+| Deep Learning | GRU |
+
+Trong đó, Naive Forecast và Moving Average đóng vai trò baseline để kiểm tra mức cải thiện của các mô hình học máy/học sâu. Random Forest sử dụng các đặc trưng thời gian, Fourier, lag và rolling. GRU sử dụng cửa sổ đầu vào dạng chuỗi thời gian để học quan hệ theo thời gian.
 
 ## 9. Kết Quả
 
-Bảng kết quả sẽ được cập nhật sau khi huấn luyện mô hình.
+Kết quả đánh giá trên tập test:
 
-| Model | MAE | RMSE | MAPE/sMAPE |
-|---|---:|---:|---:|
-| Naive Forecast |  |  |  |
-| Moving Average |  |  |  |
-| Random Forest |  |  |  |
-| GRU/LSTM |  |  |  |
+| Model | MAE | RMSE | MAPE | sMAPE |
+|---|---:|---:|---:|---:|
+| GRU | 28.39 | 43.98 | 27.69 | 23.94 |
+| Random Forest | 34.33 | 57.02 | 23.81 | 20.64 |
+| Naive Forecast | 78.21 | 119.47 | 53.37 | 45.41 |
+| Moving Average | 156.44 | 197.65 | 557.09 | 78.45 |
+
+Nhận xét nhanh:
+
+- GRU đạt MAE và RMSE thấp nhất, cho thấy dự báo sát hơn theo sai số tuyệt đối.
+- Random Forest đạt MAPE và sMAPE thấp nhất, cho thấy mô hình ổn định hơn khi xét sai số tương đối.
+- Cả GRU và Random Forest đều cải thiện rõ rệt so với hai baseline.
 
 Kết quả chi tiết được lưu tại:
 
 ```text
 results/metrics.csv
+results/predictions.csv
+figures/y_true_vs_y_pred.png
+figures/gru_training_curve.png
 ```
 
 ## 10. Cách Chạy Code
@@ -180,12 +191,14 @@ time-series-group-06/
 │   ├── data_loader.py
 │   ├── features.py
 │   ├── models.py
+│   ├── gru.py
 │   └── evaluation.py
 ├── scripts/
 │   └── generate_processed_data.py
 ├── figures/
 ├── results/
-│   └── metrics.csv
+│   ├── metrics.csv
+│   └── predictions.csv
 ├── report/
 │   └── final_report.md
 ├── requirements.txt
@@ -194,4 +207,4 @@ time-series-group-06/
 
 ## 12. Kết Luận
 
-Đề tài phù hợp với yêu cầu bài tập vì có đầu vào là chuỗi thời gian nhiều chiều và đầu ra là một biến mục tiêu một chiều. Dataset có tính mùa vụ rõ ràng, phù hợp để áp dụng các bước tiền xử lý, tạo đặc trưng và so sánh nhiều mô hình dự báo.
+Đề tài phù hợp với yêu cầu bài tập vì có đầu vào là chuỗi thời gian nhiều chiều và đầu ra là một biến mục tiêu một chiều. Dataset có tính mùa vụ rõ ràng, phù hợp để áp dụng các bước tiền xử lý, tạo đặc trưng và so sánh nhiều mô hình dự báo. Kết quả thực nghiệm cho thấy các mô hình học máy/học sâu cải thiện rõ rệt so với baseline, trong đó GRU tốt nhất theo MAE/RMSE và Random Forest tốt nhất theo MAPE/sMAPE.
