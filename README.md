@@ -117,15 +117,15 @@ Các bước chính:
 
 ## 8. Các Mô Hình Sử Dụng
 
-Nhóm đã xây dựng và so sánh 4 mô hình:
+Nhóm đã xây dựng và so sánh 5 mô hình:
 
 | Nhóm mô hình | Mô hình |
 |---|---|
 | Baseline | Naive Forecast, Moving Average |
-| Machine Learning | Random Forest |
+| Machine Learning | Linear Regression, Random Forest |
 | Deep Learning | GRU |
 
-Trong đó, Naive Forecast và Moving Average đóng vai trò baseline để kiểm tra mức cải thiện của các mô hình học máy/học sâu. Random Forest sử dụng các đặc trưng thời gian, Fourier, lag và rolling. GRU sử dụng cửa sổ đầu vào dạng chuỗi thời gian để học quan hệ theo thời gian.
+Trong đó, Naive Forecast và Moving Average đóng vai trò baseline để kiểm tra mức cải thiện của các mô hình học máy/học sâu. Linear Regression là mô hình tuyến tính dễ giải thích. Random Forest sử dụng các đặc trưng thời gian, Fourier, lag và rolling để học quan hệ phi tuyến. GRU sử dụng cửa sổ đầu vào dạng chuỗi thời gian để học quan hệ theo thời gian.
 
 ## 9. Kết Quả
 
@@ -135,6 +135,7 @@ Kết quả đánh giá trên tập test:
 |---|---:|---:|---:|---:|
 | GRU | 28.39 | 43.98 | 27.69 | 23.94 |
 | Random Forest | 34.33 | 57.02 | 23.81 | 20.64 |
+| Linear Regression | 57.74 | 85.53 | 79.55 | 43.23 |
 | Naive Forecast | 78.21 | 119.47 | 53.37 | 45.41 |
 | Moving Average | 156.44 | 197.65 | 557.09 | 78.45 |
 
@@ -142,7 +143,8 @@ Nhận xét nhanh:
 
 - GRU đạt MAE và RMSE thấp nhất, cho thấy dự báo sát hơn theo sai số tuyệt đối.
 - Random Forest đạt MAPE và sMAPE thấp nhất, cho thấy mô hình ổn định hơn khi xét sai số tương đối.
-- Cả GRU và Random Forest đều cải thiện rõ rệt so với hai baseline.
+- Linear Regression tốt hơn hai baseline theo MAE/RMSE, nhưng kém Random Forest và GRU do quan hệ giữa nhu cầu thuê xe và các biến thời gian/thời tiết có tính phi tuyến.
+- GRU, Random Forest và Linear Regression đều cải thiện rõ rệt so với hai baseline.
 
 Kết quả chi tiết được lưu tại:
 
@@ -152,6 +154,14 @@ results/predictions.csv
 figures/y_true_vs_y_pred.png
 figures/gru_training_curve.png
 ```
+
+Hình so sánh `y_true` và `y_pred`:
+
+![y_true vs y_pred](figures/y_true_vs_y_pred.png)
+
+Đường cong huấn luyện GRU:
+
+![GRU training curve](figures/gru_training_curve.png)
 
 ## 10. Cách Chạy Code
 
@@ -170,11 +180,22 @@ notebooks/03_models.ipynb
 notebooks/04_evaluation.ipynb
 ```
 
-## 11. Cấu Trúc Repository
+## 11. Quy Trình Làm Việc Trên GitHub
+
+Nhóm làm việc theo branch riêng cho từng thành viên, sau đó tạo Pull Request để review và merge vào `main`.
+
+Tài liệu hướng dẫn chi tiết:
+
+```text
+HUONG_DAN_GITHUB.md
+```
+
+## 12. Cấu Trúc Repository
 
 ```text
 time-series-group-06/
 ├── README.md
+├── HUONG_DAN_GITHUB.md
 ├── papers/
 │   ├── paper_01_itransformer.md
 │   ├── paper_02_timemixer.md
@@ -205,6 +226,6 @@ time-series-group-06/
 └── .gitignore
 ```
 
-## 12. Kết Luận
+## 13. Kết Luận
 
 Đề tài phù hợp với yêu cầu bài tập vì có đầu vào là chuỗi thời gian nhiều chiều và đầu ra là một biến mục tiêu một chiều. Dataset có tính mùa vụ rõ ràng, phù hợp để áp dụng các bước tiền xử lý, tạo đặc trưng và so sánh nhiều mô hình dự báo. Kết quả thực nghiệm cho thấy các mô hình học máy/học sâu cải thiện rõ rệt so với baseline, trong đó GRU tốt nhất theo MAE/RMSE và Random Forest tốt nhất theo MAPE/sMAPE.
