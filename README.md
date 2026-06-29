@@ -2,11 +2,11 @@
 
 ## 1. Thành Viên Nhóm
 
-| STT | Họ và tên | Vai trò dự kiến |
+| STT | Họ và tên | Phân công chính |
 |---:|---|---|
-| 1 | Thành viên 1 | Đọc iTransformer, phân tích dữ liệu |
-| 2 | Thành viên 2 | Đọc TimeMixer, feature engineering |
-| 3 | Thành viên 3 | Đọc xLSTM-Mixer, mô hình và đánh giá |
+| 1 | Phạm Minh Tuấn | Đọc iTransformer, phân tích dữ liệu |
+| 2 | Nguyễn Văn Quang | Đọc TimeMixer, feature engineering |
+| 3 | Nguyễn Phan Trung Hiếu | Đọc xLSTM-Mixer, mô hình và đánh giá |
 
 ## 2. Chủ Đề Nghiên Cứu
 
@@ -43,7 +43,7 @@ casual + registered = cnt
 
 Nếu sử dụng hai biến này, mô hình sẽ bị rò rỉ dữ liệu.
 
-## 4. Feature Engineering (Thành viên 2 – phụ trách)
+## 4. Feature Engineering (Nguyễn Văn Quang – phụ trách)
 
 Notebook `notebooks/02_feature_engineering.ipynb` thực hiện toàn bộ pipeline:
 
@@ -221,7 +221,7 @@ time-series-group-06/
 │   ├── metrics.csv
 │   └── predictions.csv
 ├── report/
-│   └── final_report.md
+│   └── final_report.pdf
 ├── requirements.txt
 └── .gitignore
 ```
